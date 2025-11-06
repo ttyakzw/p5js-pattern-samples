@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>forループ模様デザイン - サンプルコード集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #ddd6fe 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 24px;
+        }
+        
+        .header h1 {
+            color: #1f2937;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+        
+        .notice {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            border-radius: 6px;
+        }
+        
+        .notice p {
+            color: #374151;
+            font-size: 14px;
+        }
+        
+        .sample-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 16px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .sample-header {
+            padding: 24px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .sample-header:hover {
+            background: #f9fafb;
+        }
+        
+        .sample-title-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        
+        .sample-title-content {
+            flex: 1;
+        }
+        
+        .level-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .level-basic { background: #d1fae5; color: #065f46; }
+        .level-standard { background: #dbeafe; color: #1e40af; }
+        .level-advanced { background: #e9d5ff; color: #6b21a8; }
+        .level-challenge { background: #fecaca; color: #991b1b; }
+        
+        .sample-title-content h2 {
+            color: #1f2937;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .sample-theme {
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        
+        .sample-desc {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        
+        .expand-icon {
+            color: #9ca3af;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .sample-content {
+            display: none;
+            border-top: 1px solid #e5e7eb;
+            padding: 24px;
+            background: #f9fafb;
+        }
+        
+        .sample-content.active {
+            display: block;
+        }
+        
+        .techniques {
+            margin-bottom: 20px;
+        }
+        
+        .techniques h3 {
+            color: #374151;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .tech-tag {
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        .code-section {
+            margin-bottom: 16px;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .code-header h3 {
+            color: #374151;
+            font-size: 16px;
+        }
+        
+        .copy-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: #4338ca;
+        }
+        
+        .copy-btn.copied {
+            background: #10b981;
+        }
+        
+        pre {
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .improvement-tips {
+            background: #eff6ff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+        
+        .improvement-tips h3 {
+            color: #374151;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .improvement-tips ul {
+            list-style: disc;
+            margin-left: 20px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .improvement-tips li {
+            margin-bottom: 6px;
+        }
+        
+        .concept-example {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 24px;
+            margin-top: 24px;
+        }
+        
+        .concept-example h2 {
+            color: #1f2937;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .concept-content {
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 8px;
+        }
+        
+        .concept-item {
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        
+        .concept-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .concept-label {
+            color: #374151;
+            font-weight: 600;
+        }
+        
+        .concept-text {
+            color: #6b7280;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>forループ模様デザイン - サンプルコード集</h1>
+            <p>p5.js パフォーマンス課題の参考例です。コードをコピーして試してみましょう!</p>
+            <div class="notice">
+                <p>💡 <strong>使い方:</strong> これらはあくまで参考例です。そのまま提出するのではなく、自分なりの工夫を加えてオリジナル作品を作りましょう!</p>
+            </div>
+        </div>
+
+        <!-- サンプル1: 基礎レベル -->
+        <div class="sample-card">
+            <div class="sample-header" onclick="toggleSample('sample1')">
+                <div class="sample-title-row">
+                    <div class="sample-title-content">
+                        <span class="level-badge level-basic">基礎レベル</span>
+                        <h2>横一列の円パターン</h2>
+                        <p class="sample-theme">テーマ: シンプルな繰り返し</p>
+                        <p class="sample-desc">単一のforループで円を横一列に並べます。i × 60で間隔を制御しています。</p>
+                    </div>
+                    <span class="expand-icon" id="icon1">▼</span>
+                </div>
+            </div>
+            <div class="sample-content" id="sample1">
+                <div class="techniques">
+                    <h3>使用している技術:</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">forループ</span>
+                        <span class="tech-tag">変数iを座標に利用</span>
+                        <span class="tech-tag">間隔の計算</span>
+                    </div>
+                </div>
+                <div class="code-section">
+                    <div class="code-header">
+                        <h3>コード:</h3>
+                        <button class="copy-btn" onclick="copyCode('code1', this)">コピー</button>
+                    </div>
+                    <pre id="code1">function setup() {
+  createCanvas(600, 200);
+  background(240);
+  noLoop();
+}
+
+function draw() {
+  // 横一列に円を描く
+  for (let i = 0; i < 10; i++) {
+    fill(100, 150, 255);
+    circle(i * 60 + 30, 100, 40);
+  }
+}</pre>
+                </div>
+                <div class="improvement-tips">
+                    <h3>改良アイデア:</h3>
+                    <ul>
+                        <li>色を自分の好きな色に変えてみよう</li>
+                        <li>図形の数や間隔を変えてみよう</li>
+                        <li>円を四角形や三角形に変えてみよう</li>
+                        <li>if文の条件を増やして、もっと複雑な模様にしてみよう</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- サンプル2: 標準レベル(虹色) -->
+        <div class="sample-card">
+            <div class="sample-header" onclick="toggleSample('sample2')">
+                <div class="sample-title-row">
+                    <div class="sample-title-content">
+                        <span class="level-badge level-standard">標準レベル</span>
+                        <h2>虹色グラデーション</h2>
+                        <p class="sample-theme">テーマ: 条件分岐で色を変化</p>
+                        <p class="sample-desc">if文を使って位置によって色を変えています。</p>
+                    </div>
+                    <span class="expand-icon" id="icon2">▼</span>
+                </div>
+            </div>
+            <div class="sample-content" id="sample2">
+                <div class="techniques">
+                    <h3>使用している技術:</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">forループ</span>
+                        <span class="tech-tag">if文による条件分岐</span>
+                        <span class="tech-tag">色の制御</span>
+                    </div>
+                </div>
+                <div class="code-section">
+                    <div class="code-header">
+                        <h3>コード:</h3>
+                        <button class="copy-btn" onclick="copyCode('code2', this)">コピー</button>
+                    </div>
+                    <pre id="code2">function setup() {
+  createCanvas(600, 200);
+  background(30);
+  noLoop();
+}
+
+function draw() {
+  noStroke();
+  
+  for (let i = 0; i < 12; i++) {
+    // 位置によって色を変える
+    if (i < 3) {
+      fill(255, 100, 100); // 赤
+    } else if (i < 6) {
+      fill(255, 200, 100); // オレンジ
+    } else if (i < 9) {
+      fill(100, 255, 100); // 緑
+    } else {
+      fill(100, 150, 255); // 青
+    }
+    
+    rect(i * 50, 50, 45, 100);
+  }
+}</pre>
+                </div>
+                <div class="improvement-tips">
+                    <h3>改良アイデア:</h3>
+                    <ul>
+                        <li>色を自分の好きな色に変えてみよう</li>
+                        <li>図形の数や間隔を変えてみよう</li>
+                        <li>円を四角形や三角形に変えてみよう</li>
+                        <li>if文の条件を増やして、もっと複雑な模様にしてみよう</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- サンプル3: 標準レベル(サイズ変化) -->
+        <div class="sample-card">
+            <div class="sample-header" onclick="toggleSample('sample3')">
+                <div class="sample-title-row">
+                    <div class="sample-title-content">
+                        <span class="level-badge level-standard">標準レベル</span>
+                        <h2>大小の変化パターン</h2>
+                        <p class="sample-theme">テーマ: サイズの変化で動きを表現</p>
+                        <p class="sample-desc">iの値を使って円のサイズを変化させています。</p>
+                    </div>
+                    <span class="expand-icon" id="icon3">▼</span>
+                </div>
+            </div>
+            <div class="sample-content" id="sample3">
+                <div class="techniques">
+                    <h3>使用している技術:</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">forループ</span>
+                        <span class="tech-tag">変数iを計算に利用</span>
+                        <span class="tech-tag">サイズの動的変化</span>
+                    </div>
+                </div>
+                <div class="code-section">
+                    <div class="code-header">
+                        <h3>コード:</h3>
+                        <button class="copy-btn" onclick="copyCode('code3', this)">コピー</button>
+                    </div>
+                    <pre id="code3">function setup() {
+  createCanvas(600, 300);
+  background(250, 240, 230);
+  noLoop();
+}
+
+function draw() {
+  noStroke();
+  fill(255, 150, 100, 180);
+  
+  for (let i = 0; i < 10; i++) {
+    // iを使ってサイズを変化させる
+    let size = i * 8 + 20;
+    circle(i * 60 + 30, 150, size);
+  }
+}</pre>
+                </div>
+                <div class="improvement-tips">
+                    <h3>改良アイデア:</h3>
+                    <ul>
+                        <li>色を自分の好きな色に変えてみよう</li>
+                        <li>図形の数や間隔を変えてみよう</li>
+                        <li>円を四角形や三角形に変えてみよう</li>
+                        <li>if文の条件を増やして、もっと複雑な模様にしてみよう</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- サンプル4: 発展レベル(グリッド) -->
+        <div class="sample-card">
+            <div class="sample-header" onclick="toggleSample('sample4')">
+                <div class="sample-title-row">
+                    <div class="sample-title-content">
+                        <span class="level-badge level-advanced">発展レベル</span>
+                        <h2>ドットグリッド模様</h2>
+                        <p class="sample-theme">テーマ: 格子状のパターン</p>
+                        <p class="sample-desc">ネストされたforループで縦横に図形を配置します。iとjを座標に使用。</p>
+                    </div>
+                    <span class="expand-icon" id="icon4">▼</span>
+                </div>
+            </div>
+            <div class="sample-content" id="sample4">
+                <div class="techniques">
+                    <h3>使用している技術:</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">ネストされたforループ</span>
+                        <span class="tech-tag">i→X座標、j→Y座標</span>
+                        <span class="tech-tag">2次元パターン</span>
+                    </div>
+                </div>
+                <div class="code-section">
+                    <div class="code-header">
+                        <h3>コード:</h3>
+                        <button class="copy-btn" onclick="copyCode('code4', this)">コピー</button>
+                    </div>
+                    <pre id="code4">function setup() {
+  createCanvas(600, 600);
+  background(20);
+  noLoop();
+}
+
+function draw() {
+  noStroke();
+  
+  // 外側のループ: 横方向(X座標)
+  for (let i = 0; i < 10; i++) {
+    // 内側のループ: 縦方向(Y座標)
+    for (let j = 0; j < 10; j++) {
+      fill(100, 200, 255);
+      circle(i * 60 + 30, j * 60 + 30, 20);
+    }
+  }
+}</pre>
+                </div>
+                <div class="improvement-tips">
+                    <h3>改良アイデア:</h3>
+                    <ul>
+                        <li>色を自分の好きな色に変えてみよう</li>
+                        <li>図形の数や間隔を変えてみよう</li>
+                        <li>円を四角形や三角形に変えてみよう</li>
+                        <li>if文の条件を増やして、もっと複雑な模様にしてみよう</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- サンプル5: 発展レベル(市松模様) -->
+        <div class="sample-card">
+            <div class="sample-header" onclick="toggleSample('sample5')">
+                <div class="sample-title-row">
+                    <div class="sample-title-content">
+                        <span class="level-badge level-advanced">発展レベル</span>
+                        <h2>チェッカーボード(市松模様)</h2>
+                        <p class="sample-theme">テーマ: 和柄風のデザイン</p>
+                        <p class="sample-desc">ネストされたforループとif文で交互に色を変えます。</p>
+                    </div>
+                    <span class="expand-icon" id="icon5">▼</span>
+                </div>
+            </div>
+            <div class="sample-content" id="sample5">
+                <div class="techniques">
+                    <h3>使用している技術:</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">ネストされたforループ</span>
+                        <span class="tech-tag">if文との組み合わせ</span>
+                        <span class="tech-tag">剰余演算(%)の活用</span>
+                    </div>
+                </div>
+                <div class="code-section">
+                    <div class="code-header">
+                        <h3>コード:</h3>
+                        <button class="copy-btn" onclick="copyCode('code5', this)">コピー</button>
+                    </div>
+                    <pre id="code5">function setup() {
+  createCanvas(600, 600);
+  background(255);
+  noLoop();
+}
+
+function draw() {
+  noStroke();
+  
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+      // (i + j)が偶数なら黒、奇数なら白
+      if ((i + j) % 2 === 0) {
+        fill(40, 40, 60);
+      } else {
+        fill(220, 220, 240);
+      }
+      
+      rect(i * 60, j * 60, 60, 60);
+    }
+  }
+}</pre>
+                </div>
+                <div class="improvement-tips">
+                    <h3>改良アイデア:</h3>
+                    <ul>
+                        <li>色を自分の好きな色に変えてみよう</li>
+                        <li>図形の数や間隔を変えてみよう</li>
+                        <li>円を四角形や三角形に変えてみよう</li>
+                        <li>if文の条件を増やして、もっと複雑な模様にしてみよう</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- サンプル6: 挑戦レベル -->
+        <div class="sample-card">
+            <div class="sample-header" onclick="toggleSample('sample6')">
+                <div class="sample-title-row">
+                    <div class="sample-title-content">
+                        <span class="level-badge level-challenge">挑戦レベル</span>
+                        <h2>グラデーション円グリッド</h2>
+                        <p class="sample-theme">テーマ: デジタルアート風</p>
+                        <p class="sample-desc">ネストされたforループで位置によって色とサイズを変化させます。</p>
+                    </div>
+                    <span class="expand-icon" id="icon6">▼</span>
+                </div>
+            </div>
+            <div class="sample-content" id="sample6">
+                <div class="techniques">
+                    <h3>使用している技術:</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">ネストされたforループ</span>
+                        <span class="tech-tag">複数の条件分岐</span>
+                        <span class="tech-tag">透明度の制御</span>
+                    </div>
+                </div>
+                <div class="code-section">
+                    <div class="code-header">
+                        <h3>コード:</h3>
+                        <button class="copy-btn" onclick="copyCode('code6', this)">コピー</button>
+                    </div>
+                    <pre id="code6">function setup() {
+  createCanvas(600, 600);
+  background(10, 10, 30);
+  noLoop();
+}
+
+function draw() {
+  noStroke();
+  
+  for (let i = 0; i < 12; i++) {
+    for (let j = 0; j < 12; j++) {
+      // 位置によって色を変える
+      let r = i * 20;
+      let b = j * 20;
+      fill(r, 100, b, 150);
+      
+      // 位置によってサイズを変える
+      let size = 30;
+      if (i === j) {
+        size = 40; // 対角線上は大きく
+      }
+      
+      circle(i * 50 + 25, j * 50 + 25, size);
+    }
+  }
+}</pre>
+                </div>
+                <div class="improvement-tips">
+                    <h3>改良アイデア:</h3>
+                    <ul>
+                        <li>色を自分の好きな色に変えてみよう</li>
+                        <li>図形の数や間隔を変えてみよう</li>
+                        <li>円を四角形や三角形に変えてみよう</li>
+                        <li>if文の条件を増やして、もっと複雑な模様にしてみよう</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- コンセプトシートの例 -->
+        <div class="concept-example">
+            <h2>💭 コンセプトシートの書き方例</h2>
+            <div class="concept-content">
+                <div class="concept-item">
+                    <span class="concept-label">テーマ:</span>
+                    <span class="concept-text">「夜空に浮かぶ星のイメージ」</span>
+                </div>
+                <div class="concept-item">
+                    <span class="concept-label">使った技術:</span>
+                    <span class="concept-text">ネストされたforループで格子状に円を配置し、if文で対角線上の円だけ大きくしました。</span>
+                </div>
+                <div class="concept-item">
+                    <span class="concept-label">工夫した点:</span>
+                    <span class="concept-text">i × 50 + 25という計算で、キャンバスの端から均等に余白が取れるようにしました。また、i === j の条件で対角線を判定し、そこだけ目立つように設計しました。最初はサイズの差が小さくて分かりにくかったので、40と30に調整しました。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSample(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById('icon' + id.slice(-1));
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('active');
+                icon.textContent = '▲';
+            }
+        }
+
+        function copyCode(codeId, button) {
+            const code = document.getElementById(codeId).textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = 'コピー完了!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = 'コピー';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
